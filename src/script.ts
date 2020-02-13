@@ -1,19 +1,43 @@
 import * as fs from 'fs';
 
 function generateJSON(): void {
-  const str = fs.readFileSync('../data/raw.txt', 'utf8');
+  const result: any = {
+    position: null,
+    scale: null,
+    rotation: null,
+    anchorPoint: null,
+    frames: []
+  };
+  const info = fs.readFileSync('./data/info.txt', 'utf8');
+  const infoLines = info.split("\n");
+
+  process(infoLines, result, false);
+
+  const str = fs.readFileSync('./data/raw.txt', 'utf8');
   const lines = str.split("\n");
+  
+  process(lines, result, true);
 
-  const frames: any = [];
+  fs.writeFile("./data/data.json", JSON.stringify(result), (err) => {
+    if (err) {
+      console.error(err);
+      return;
+    };
+    console.log("File has been created");
+  });
+}
 
+function process(lines: string[], result: any, isFrames: boolean) {
   let isScaleActive = false;
   let isPositionActive = false;
   let isRotationActive = false;
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();    
+  const frames = result.frames;
 
-    if (!line) {      
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+
+    if (!line) {
       isScaleActive = false;
       isPositionActive = false;
       isRotationActive = false;
@@ -24,7 +48,7 @@ function generateJSON(): void {
       line === "Frame	X percent	Y percent	Z percent" ||
       line === "Frame	X pixels	Y pixels	Z pixels" ||
       line === "Frame	degrees"
-    ) {      
+    ) {
       continue;
     }
 
@@ -32,21 +56,33 @@ function generateJSON(): void {
       const arr = line.split("\t");
       const index = arr[0];
 
-      if (!frames[index]) {
+      if (isFrames && !frames[index]) {
         frames[index] = {};
       }
 
       if (isScaleActive) {
-        frames[index].scale = Number(arr[1]);
-      }   
-      
-      if (isPositionActive) {
-        frames[index].position = [Number(arr[1]), Number(arr[2])];
-      } 
+        if (isFrames) {
+          frames[index].scale = Number(arr[1]);
+        } else {
+          result.scale = Number(arr[1]);
+        }        
+      }
+
+      if (isPositionActive) {        
+        if (isFrames) {
+          frames[index].position = [Number(arr[1]), Number(arr[2])];
+        } else {
+          result.position = [Number(arr[1]), Number(arr[2])];
+        }  
+      }
 
       if (isRotationActive) {
-        frames[index].rotation = Number(arr[1]);
-      } 
+        if (isFrames) {
+          frames[index].rotation = Number(arr[1]);
+        } else {
+          result.rotation = Number(arr[1]);
+        }  
+      }
 
       continue;
     }
@@ -70,14 +106,6 @@ function generateJSON(): void {
       break;
     }
   }
-
-  fs.writeFile("../data/data.json", JSON.stringify(frames), (err) => {
-    if (err) {
-        console.error(err);
-        return;
-    };
-    console.log("File has been created");
-});
 }
 
 generateJSON();
