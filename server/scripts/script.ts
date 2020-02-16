@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from "fs";
 
 function generateJSON(): void {
   const result: any = {
@@ -8,21 +8,21 @@ function generateJSON(): void {
     anchorPoint: null,
     frames: []
   };
-  const info = fs.readFileSync('./data/info.txt', 'utf8');
+  const info = fs.readFileSync("server/data/info.txt", "utf8");
   const infoLines = info.split("\n");
 
   process(infoLines, result, false);
 
-  const str = fs.readFileSync('./data/raw.txt', 'utf8');
+  const str = fs.readFileSync("server/data/raw.txt", "utf8");
   const lines = str.split("\n");
-  
+
   process(lines, result, true);
 
-  fs.writeFile("./data/data.json", JSON.stringify(result), (err) => {
+  fs.writeFile("server/data/data.json", JSON.stringify(result), (err) => {
     if (err) {
       console.error(err);
       return;
-    };
+    }
     console.log("File has been created");
   });
 }
@@ -65,15 +65,15 @@ function process(lines: string[], result: any, isFrames: boolean) {
           frames[index].scale = Number(arr[1]);
         } else {
           result.scale = Number(arr[1]);
-        }        
+        }
       }
 
-      if (isPositionActive) {        
+      if (isPositionActive) {
         if (isFrames) {
           frames[index].position = [Number(arr[1]), Number(arr[2])];
         } else {
           result.position = [Number(arr[1]), Number(arr[2])];
-        }  
+        }
       }
 
       if (isRotationActive) {
@@ -81,7 +81,7 @@ function process(lines: string[], result: any, isFrames: boolean) {
           frames[index].rotation = Number(arr[1]);
         } else {
           result.rotation = Number(arr[1]);
-        }  
+        }
       }
 
       continue;

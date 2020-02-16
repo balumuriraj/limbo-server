@@ -11,7 +11,7 @@
     "lint": "tslint server/**/*.ts --fix",
     "build": "tsc -p ./prod.tsconfig.json && ncp './server/config' './dist/server/config'",
     "postinstall": "npm run build",
-    "script": "ts-node ./src/script.ts"
+    "script": "ts-node server/scripts/script.ts"
   },
   "author": "",
   "license": "MIT",

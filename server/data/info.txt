@@ -8,15 +8,15 @@ Adobe After Effects 8.0 Keyframe Data
 
 Transform	Scale
 	Frame	X percent	Y percent	Z percent	
-	0	119	119	100	
+	0	112.984	112.984	100	
 
 Transform	Position
 	Frame	X pixels	Y pixels	Z pixels	
-	0	183	79.5	0	
+	0	4.44041	-0.999738	0	
 
 Transform	Rotation
 	Frame	degrees	
-	0	-10	
+	0	-9	
 
 
 End of Keyframe Data
