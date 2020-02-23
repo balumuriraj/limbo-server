@@ -1,3 +1,4 @@
+import * as path from "path";
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
 import * as cors from "cors";
@@ -30,6 +31,7 @@ class App {
 
   // Configure API endpoints.
   private routes(): void {
+    this.express.use("/static", express.static(path.join(__dirname, "public")));
     this.express.use("/api/rest", restRouter);
   }
 

@@ -12,7 +12,7 @@ Transform	Scale
 
 Transform	Position
 	Frame	X pixels	Y pixels	Z pixels	
-	0	4.44041	-0.999738	0	
+	0	4.44041	-11.4997	0	
 
 Transform	Rotation
 	Frame	degrees	
