@@ -6,6 +6,7 @@ import * as express from "express";
 import * as helmet from "helmet";
 import * as http from "http";
 import restRouter from "./routes/rest/router";
+import tokenRouter from "./routes/token/router";
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -32,6 +33,7 @@ class App {
   // Configure API endpoints.
   private routes(): void {
     this.express.use("/static", express.static(path.join(__dirname, "public")));
+    this.express.use("/api", tokenRouter);
     this.express.use("/api/rest", restRouter);
   }
 

@@ -15,7 +15,7 @@ const videoFrameFileName = "video-%04d.jpg";
 const lottieFrameFileName = "frame-%04d.png";
 
 // TODO
-const input = path.join(path.dirname(__dirname), "../", "public", "videos", "shot2.mp4");
+const input = path.join(path.dirname(__dirname), "../", "public", "videos", "shot3.mp4");
 
 router.get("/test/", async (req, res, next) => {
   req.connection.setTimeout( 1000 * 60 * 10 ); // ten minutes
@@ -37,7 +37,7 @@ router.get("/test/", async (req, res, next) => {
 
     const lottieCanvas = createCanvas(width, height);
     // const json = await getJSON("https://assets5.lottiefiles.com/packages/lf20_OcUkq1.json");
-    const json = await getJSON("http://localhost:4000/static/jsons/2.json");
+    const json = await getJSON("http://localhost:4000/static/jsons/3.json");
     const assetsPath = `${path.join(path.dirname(__dirname), "../", "public", "images", "/")}`;
     // const d = path.join(path.dirname(__dirname), "../", "public", "1.json");
     // const animation = getLottieAnimation(d, lottieCanvas, {assetsPath});
