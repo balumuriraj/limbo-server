@@ -17,8 +17,7 @@ export async function getDownloadUrl(path: string) {
 }
 
 export async function downloadFile(src: string, dest: string) {
-  await bucket.file(src).download({ destination: dest });
-  console.log(`${src} downloaded to ${dest}.`);
+  return bucket.file(src).download({ destination: dest });
 }
 
 

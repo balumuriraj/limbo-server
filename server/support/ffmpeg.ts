@@ -4,12 +4,6 @@ import { downloadFile } from "./firebaseUtils";
 const pathToFfmpeg = require("ffmpeg-static");
 ffmpeg.setFfmpegPath(pathToFfmpeg);
 
-const probe = require("node-ffprobe");
-const ffprobeInstaller = require("@ffprobe-installer/ffprobe");
-
-// console.log(ffprobeInstaller.path, ffprobeInstaller.version);
-probe.FFPROBE_PATH = ffprobeInstaller.path;
-
 const fps = "25";
 const audioFileName = "audio.mp3";
 const videoFrameFileName = "video-%04d.jpg";
@@ -54,13 +48,4 @@ export async function createVideo(tempDirPath: string, outputFileName: string) {
       .outputFPS(25)
       .run();
   });
-}
-
-export async function getVideoMeta(videoPath: string) {
-  const info = await probe(videoPath);
-  const numFramesTotal = parseInt(info.streams[0].nb_frames, null);
-
-  return {
-    framesCount: numFramesTotal
-  };
 }
