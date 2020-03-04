@@ -1,4 +1,5 @@
 import * as ffmpeg from "fluent-ffmpeg";
+import { downloadFile } from "./firebaseUtils";
 
 const pathToFfmpeg = require("ffmpeg-static");
 ffmpeg.setFfmpegPath(pathToFfmpeg);
@@ -13,9 +14,11 @@ const fps = "25";
 const audioFileName = "audio.mp3";
 const videoFrameFileName = "video-%04d.jpg";
 
-export async function extractVideoFrames(videoPath: string, tempDirPath: string): Promise<any> {
+export async function extractVideoFrames(fsPath: string, tempDirPath: string): Promise<any> {
   const outputPath = `${tempDirPath}/${videoFrameFileName}`;
   const audioPath = `${tempDirPath}/${audioFileName}`;
+  const videoPath = `${tempDirPath}/video.mp4`;
+  await downloadFile(fsPath, videoPath);
   const cmd = ffmpeg(videoPath).outputOptions(["-r", fps]);
 
   return new Promise((resolve, reject) => {

@@ -10,6 +10,18 @@ admin.initializeApp({
 const baseUrl = "https://storage.googleapis.com/funwithlimbo.appspot.com";
 const bucket = admin.storage().bucket();
 
+export async function getDownloadUrl(path: string) {
+  const expires = new Date().getTime() + (5 * 60 * 1000); // 5 mins
+  const res = await bucket.file(path).getSignedUrl({ action: "read", expires });
+  return res[0];
+}
+
+export async function downloadFile(src: string, dest: string) {
+  await bucket.file(src).download({ destination: dest });
+  console.log(`${src} downloaded to ${dest}.`);
+}
+
+
 // export async function uploadImage(url: string, dest: string) {
 //   try {
 //     const buffer = await download(url);

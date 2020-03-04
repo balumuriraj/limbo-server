@@ -54,7 +54,7 @@ const createImageData = `function createImageData(assetData) {
 const virtualConsole = new jsdom.VirtualConsole();
 virtualConsole.sendTo(console);
 
-export function getLottieAnimation(animationData: any, canv: any, options: any = {}) {
+export function getLottieAnimation(animationData: any, canv: any, options: { width: number; height: number; }) {
   const { window } = new JSDOM("", {
     pretendToBeVisual: true,
     virtualConsole
@@ -68,7 +68,7 @@ export function getLottieAnimation(animationData: any, canv: any, options: any =
   const { createElement } = document;
   document.createElement = localName => {
     if (localName === "canvas") {
-      return new Canvas(512, 256);
+      return new Canvas(options.width, options.height);
     }
 
     if (localName === "img") {
@@ -100,5 +100,5 @@ export function getLottieAnimation(animationData: any, canv: any, options: any =
   }
   // Allow passing canvas instead of rendererSettings, since there isn't much choice for Node.js anyway
   const rendererSettings = { context: canv.getContext("2d"), clearCanvas: true };
-  return window.lottie.loadAnimation({ ...options, animationData, renderer: "canvas", rendererSettings });
+  return window.lottie.loadAnimation({ animationData, renderer: "canvas", rendererSettings });
 }
