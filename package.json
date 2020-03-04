@@ -9,7 +9,7 @@
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "lint": "tslint server/**/*.ts --fix",
-    "build": "tsc -p ./prod.tsconfig.json && ncp './server/config' './dist/config'",
+    "build": "tsc -p ./prod.tsconfig.json && ncp './server/config/serviceAccountKey.json' './dist/config/serviceAccountKey.json'",
     "postinstall": "npm run build"
   },
   "author": "",
@@ -39,9 +39,9 @@
     "@types/firebase": "^3.2.1",
     "@types/fluent-ffmpeg": "^2.1.14",
     "@types/jsdom": "^16.1.0",
-    "@types/node": "^13.7.7",    
+    "@types/node": "^13.7.7",
     "nodemon": "^2.0.2",
     "ts-node": "^8.6.2",
-    "tslint": "^6.0.0"    
+    "tslint": "^6.0.0"
   }
 }

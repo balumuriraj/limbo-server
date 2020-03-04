@@ -13,3 +13,4 @@ dist
 server/data/result/*
 .vscode/
 ts-node-*/
+server/config/serviceAccountKey.json
