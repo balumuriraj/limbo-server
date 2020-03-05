@@ -24,16 +24,12 @@ router.get("/create/:id", async (req, res, next) => {
   let tempDir = null;
 
   try {
-    const dimensions = JSON.parse(size);
-    const width = parseInt(dimensions[0], null);
-    const height = parseInt(dimensions[1], null);
-
     tmp.setGracefulCleanup();
     tempDir = tmp.dirSync({ unsafeCleanup: true });
     const tempDirPath = tempDir.name;
     // console.log("tempDirPath: ", tempDirPath);
 
-    const faces = JSON.parse(facePaths);
+    const faces = facePaths.split(",").map((path) => path.trim());
     const faceUrls: string[] = [];
 
     for (const facePath of faces) {
@@ -42,6 +38,7 @@ router.get("/create/:id", async (req, res, next) => {
     }
 
     const animationUrl = await getDownloadUrl(animationPath);
+    const [ width, height] = size.split(",").map((dim) => parseInt(dim.trim(), null));
     const lottieCanvas = createCanvas(width, height);
     const json = await getJSON(animationUrl, faceUrls);
     const animation = getLottieAnimation(json, lottieCanvas, { width, height });
@@ -137,7 +134,7 @@ router.get("/create/:id", async (req, res, next) => {
     }
   } catch (err) {
     console.log(err);
-    res.send(err);
+    res.status(500).send({ error: "err" });
   } finally {
     if (tempDir) {
       tempDir.removeCallback();
