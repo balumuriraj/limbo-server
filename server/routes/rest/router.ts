@@ -43,20 +43,19 @@ router.get("/create/:id", async (req, res, next) => {
     const json = await getJSON(animationUrl, faceUrls);
     const animation = getLottieAnimation(json, lottieCanvas, { width, height });
 
-    // let t1 = null; let t2 = null;
-    // t1 = Date.now();
+    let t1 = null; let t2 = null;
+    t1 = Date.now();
     await extractVideoFrames(videoPath, tempDirPath);
-    // t2 = Date.now();
-    // console.log(`extractVideoFrames: ${(Math.abs(t1 - t2) / 1000) % 60}sec`);
+    t2 = Date.now();
+    console.log(`extractVideoFrames: ${(Math.abs(t1 - t2) / 1000) % 60}sec`);
 
     const promises: Promise<void>[] = [];
 
-    // t1 = Date.now();
+    t1 = Date.now();
     const count = parseInt(framesCount, null);
     for (let i = 1; i <= count; i++) {
       const imgPath = `${tempDirPath}/video-${padToFour(i)}.jpg`;
       const image = await loadImage(imgPath);
-
       const canvas = createCanvas(width, height);
       const ctx = canvas.getContext("2d");
 
@@ -91,16 +90,16 @@ router.get("/create/:id", async (req, res, next) => {
       });
       promises.push(promise);
     }
-    // t2 = Date.now();
-    // console.log(`forLoop: ${(Math.abs(t1 - t2) / 1000) % 60}sec`);
+    t2 = Date.now();
+    console.log(`forLoop: ${(Math.abs(t1 - t2) / 1000) % 60}sec`);
 
     // t1 = Date.now();
     await Promise.all(promises);
     await createVideo(tempDirPath, outputFileName);
-    // console.log("all done...");
+    console.log("all done...");
 
-    // t2 = Date.now();
-    // console.log(`createVideo: ${(Math.abs(t1 - t2) / 1000) % 60}sec`);
+    t2 = Date.now();
+    console.log(`createVideo: ${(Math.abs(t1 - t2) / 1000) % 60}sec`);
 
     // res.download(`${tempDirPath}/${outputFileName}`);
 
