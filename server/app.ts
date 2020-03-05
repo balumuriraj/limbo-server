@@ -33,6 +33,7 @@ class App {
 
   // Configure API endpoints.
   private routes(): void {
+    this.express.get("/", async (req, res, next) => res.send("<h1>Welcome to limbo!</h1>"));
     this.express.use("/api", tokenRouter);
     this.express.use("/api/rest", restRouter);
   }
