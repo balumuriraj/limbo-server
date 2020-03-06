@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start:debug": "node --inspect ./dist/app.js",
     "start": "node ./dist/app.js",
     "start:dev": "nodemon",
     "tsc": "tsc",
@@ -28,10 +29,10 @@
     "helmet": "^3.21.3",
     "jsdom": "^16.2.0",
     "lottie-web": "^5.6.5",
+    "ncp": "^2.0.0",
     "node-fetch": "^2.6.0",
     "tmp": "^0.1.0",
-    "typescript": "^3.8.3",
-    "ncp": "^2.0.0"
+    "typescript": "^3.8.3"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.0",

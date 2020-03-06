@@ -4,6 +4,7 @@ import * as jsdom from "jsdom";
 import { JSDOM } from "jsdom";
 import { Canvas, Image } from "canvas";
 import * as fetch from "node-fetch";
+import { getDownloadUrl } from "./firebaseUtils";
 
 // This is probably not the best way to handle Lottie image loading in Node.
 // JSDOM's wrapped `Image` object should work, but attempts resulted in "Image given has not completed loading"
@@ -54,7 +55,7 @@ const createImageData = `function createImageData(assetData) {
 const virtualConsole = new jsdom.VirtualConsole();
 virtualConsole.sendTo(console);
 
-export function getLottieAnimation(animationData: any, canv: any, options: { width: number; height: number; }) {
+function getLottie(animationData: any, canv: Canvas, options: { width: number; height: number; }) {
   const { window } = new JSDOM("", {
     pretendToBeVisual: true,
     virtualConsole
@@ -101,4 +102,39 @@ export function getLottieAnimation(animationData: any, canv: any, options: { wid
   // Allow passing canvas instead of rendererSettings, since there isn't much choice for Node.js anyway
   const rendererSettings = { context: canv.getContext("2d"), clearCanvas: true };
   return window.lottie.loadAnimation({ animationData, renderer: "canvas", rendererSettings });
+}
+
+async function getJSON(url: string, faceUrls: string[]) {
+  return fetch(url)
+    .then(res => res.json())
+    .then((json) => {
+      // Map of readable names
+      const paths = { file: "p", folder: "u", preserveAspectRatio: "pr" };
+      // Filter out images
+      const images = (json.assets || []).filter(asset => asset[paths.folder]); // Only images have folders
+      // Change image path to empty string since we've flattened the folder structure
+      images.forEach((asset, index) => {
+        // asset[paths.folder] = `${path.join(path.dirname(__dirname), "../", "public", "images")}/`; // Set folder to the same directory as data.json
+        asset[paths.folder] = "";
+        asset[paths.file] = faceUrls[index]; // Override image
+        asset["e"] = 1;
+        // asset[paths.preserveAspectRatio] = "xMidYMid meet"; // "Contain" image, See https://github.com/airbnb/lottie-web/issues/1046
+      });
+
+      return json;
+    });
+}
+
+export async function getLottieAnimation(lottieCanvas: Canvas, animationPath: string, facePaths: string[], options: { width: number; height: number; }) {
+  const faceUrls: string[] = [];
+
+  for (const facePath of facePaths) {
+    const faceUrl = await getDownloadUrl(facePath);
+    faceUrls.push(faceUrl);
+  }
+
+  const animationUrl = await getDownloadUrl(animationPath);
+  const json = await getJSON(animationUrl, faceUrls);
+
+  return getLottie(json, lottieCanvas, options);
 }
